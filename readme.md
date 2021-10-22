@@ -6,6 +6,10 @@ Go through the varying differnt levels where the driving gets more and more dang
 TLDR: Get Bambi to her mom before she dead
 
 
+![autodraw 10_22_2021 (1)](https://user-images.githubusercontent.com/91720534/138503987-4ba7a633-0b18-414b-8d58-b04d963d1201.png)
+
+
+
 # MVP: 
 * 1. Have a start screen 
 * 2. Have a game screen with the title of the borough on the top (5 levels)
