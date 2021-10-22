@@ -12,13 +12,14 @@ TLDR: Get Bambi to her mom before she dead
 
 # MVP: 
 * 1. Have a start screen 
-* 2. Have a game screen with the title of the borough on the top (5 levels)
-* 3. Have a moveable Bambi model with smooth movement
-* 4. Have cars that move and have gimmicks depending on the level
-* 5. Have a bambiMom asset at the end of level 6 (Open forest level to just walk up to the mother)
+* 2. Have a game screen with the title of the borough on the top (2 levels)
+* 3. Have three lives for Bambi
+* 4. Have a moveable Bambi model with smooth movement
+* 5. Have cars that move and have gimmicks depending on the level
+* 6. Have a bambiMom asset at the end of level 3 (Open forest level to just walk up to the mother)
 
 
 # Stretch goals
 * 1. Have a video play at the player reaching Bambi's mother
 * 2. Make the car movements completely random so players cannot memorize stage
-* 3. Have three lives for Bambi
+* 3. Add the rest of the levels and change level 3 to 6
