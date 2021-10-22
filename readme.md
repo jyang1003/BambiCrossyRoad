@@ -4,3 +4,13 @@ Be careful not to get hit by the cars on this extremely wide highway! These driv
 Go through the varying differnt levels where the driving gets more and more dangerous and where cars seem to not understand the directions they're supposed to drive. 
 
 TLDR: Get Bambi to her mom before she dead
+
+
+# MVP: 
+* 1. Have a start screen 
+* 2. Have a game screen with the title of the borough on the top (5 levels)
+* 3. Have a moveable Bambi model with smooth movement
+* 4. Have three lives for Bambi
+* 5. Have cars that move and have gimmicks depending on the level
+* 6. Have a bambiMom asset at the end of level 6 (Open forest level to just walk up to the mother)
+* 7. Have a video play at the player reaching Bambi's mother
