@@ -28,14 +28,14 @@ canvas {
 
 #container {
     width: 80vw;
-    height: 70vh;
+    height: 90vh;
     /* height: 70vh; */
     background-color: green;
     margin: 0 auto;
     padding: 1em;
     display: grid;
     grid-gap: 1em;
-    grid-template-rows: .25fr .5fr .05fr;
+    grid-template-rows: .25fr 1fr .05fr;
     grid-template-columns: .25fr .5fr .25fr;
     grid-template-areas: "top-left top-left top-right"
                         "game game game"

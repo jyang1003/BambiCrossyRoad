@@ -2,12 +2,13 @@
 let startButton;
 let levelName;
 let carSpawnTime = Math.floor(Math.random() * 2500 + 1000)
-let carSize = Math.floor(Math.random() * 120 + 70)
+let carSize = () => { let size = Math.floor(Math.random() * 120 + 70) }
 let maxCarsOne = 6
 let maxCarsTwo = 6
 let maxCarsThree = 6
 let maxCarsFour = 6
 let playerLives = 3
+
 const playerLifeText = document.querySelector('#btm-left')
 
 //query selectors
@@ -92,10 +93,31 @@ class CarObject {
             left: false
         }
     }
-    render = function () {
-        ctx.fillStyle = this.color
-        ctx.fillRect(this.x, this.y, this.width, this.height)
-    }
+        moveCar() {
+            if (this.direction.up) this.y -= 0
+            if (this.y <= 0) {
+                this.y = 0
+            }
+            if (this.direction.left) this.x -= 15
+            if (this.x <= 0) {
+                this.x = 0
+            }
+            // move down
+            if (this.direction.down) this.y += 0
+            if (this.y + this.height >= game.height) {
+                this.y = game.height - this.height
+            }
+            // move right
+            if (this.direction.right) this.x += 15
+            if (this.x + this.width >= game.width) {
+                this.x = game.width - this.width
+            }
+        }
+        render = function () {
+            ctx.fillStyle = this.color
+            ctx.fillRect(this.x, this.y, this.width, this.height)
+        }
+    
 }
 //bambi mom object
 class BambiMom {
@@ -113,21 +135,33 @@ class BambiMom {
     }
 }
 
-let player = new Bambi(200, 200, '#ab650f', 25, 25)
-let carLaneOne = new CarObject(0, 0, '#7d7d78', carSize, 45)
-let carLaneTwo = new CarObject(0, 50, '#7d7d78', carSize, 45)
-let carLaneThree = new CarObject(0, 100, '#7d7d78', carSize, 45)
-let carLaneFour = new CarObject(0, 150, '#7d7d78', carSize, 45)
-
+let player = new Bambi(580, 410, '#ab650f', 25, 25)
+let carLaneOne = new CarObject(0, 0, 'white', 150, 45)
+let carLaneTwo = new CarObject(0, 50, 'white', 150, 45)
+let carLaneThree = new CarObject(0, 100, 'white', 150, 45)
+let carLaneFour = new CarObject(0, 150, 'white', 150, 45)
+let carSpawn = () => {
+    carLaneOne.render()
+    carLaneTwo.render()
+    carLaneThree.render()
+    carLaneFour.render()
+};
+let spawn = () => setInterval(carSpawn, carSpawnTime)
 //function that makes the game run, setInterval
 const gameLoop = () => {
     // clear the canvas
     ctx.clearRect(0, 0, game.width, game.height)
     player.render()
     player.movePlayer()
+
     //game only runs if player alive
     if (player.alive) {
-        detectHit(CarObject)
+        spawn()
+        detectHit(carLaneOne)
+        detectHit(carLaneTwo)
+        detectHit(carLaneThree)
+        detectHit(carLaneFour)
+
     }
     else {
         if (player.lives > 0) {
@@ -138,7 +172,7 @@ const gameLoop = () => {
             playerLifeText.innerHTML = playerLives
         }
         else {
-            //stopGameLoop
+            stopGameLoop
         }
     }
 
@@ -154,16 +188,17 @@ const detectHit = (thing) => {
         player.alive = false
     }
 }
+let stopGameLoop = () => clearInterval(gameLoop)
 let gameInterval = setInterval(gameLoop, 30)
-document.addEventListener('keydown', (e)=>{
+
+document.addEventListener('keydown', (e) => {
     player.setDirection(e.key)
 })
-document.addEventListener('keyup', (e)=>{
-    if(['w', 'a', 's', 'd'].includes(e.key)){
+document.addEventListener('keyup', (e) => {
+    if (['w', 'a', 's', 'd'].includes(e.key)) {
         player.unsetDirection(e.key)
     }
 })
-//car movement function
 //car gets deleted when it reaches end
 //new car comes out
 //set interval changes randomly to random car spawn
