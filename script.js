@@ -107,9 +107,12 @@ class BambiMom {
 let player = new Bambi(50, 50, '#ab650f',25, 25)
 let carLaneOne = new CarObject(0, 0, '#7d7d78', carSize, 45)
 //function that makes the game run, setInterval
-
+const gameLoop = () => {
+    // clear the canvas
+    ctx.clearRect(0, 0, game.width, game.height)
+}
 const detectHit = (thing) => {
-    // if the player's x + width or y + height hits the ogre's x+width or y+height, kill shrek
+    // if the player's x + width or y + height hits the car, kill player
     if (
         player.x < thing.x + thing.width &&
         player.x + player.width > thing.x &&
