@@ -3,11 +3,13 @@ let startButton;
 let levelName;
 let carSpawnTime = Math.floor(Math.random() * 2500 + 1000)
 const ctx = game.getContext('2d')
-let carSize = Math.floor(Math.random() * 100 + 70)
+let carSize = Math.floor(Math.random() * 120 + 70)
 let maxCarsOne = 6
 let maxCarsTwo = 6
 let maxCarsThree = 6
 let maxCarsFour = 6
+let playerLives = 3
+const playerLifeText = document.querySelector('#btm-left')
 
 //query selectors
 //assets
@@ -82,10 +84,11 @@ class CarObject {
             down: false,
             right: false,
             left: true
-    }
-    render = function () {
-        ctx.fillStyle = this.color
-        ctx.fillRect(this.x, this.y, this.width, this.height)
+        }
+        render = function () {
+            ctx.fillStyle = this.color
+            ctx.fillRect(this.x, this.y, this.width, this.height)
+        }
     }
 }
 //bambi mom object
@@ -97,19 +100,37 @@ class BambiMom {
         this.width = width
         this.height = height
         this.alive = false
-        }
-        render = function () {
-            ctx.fillStyle = this.color
-            ctx.fillRect(this.x, this.y, this.width, this.height)
-        }
     }
+    render = function () {
+        ctx.fillStyle = this.color
+        ctx.fillRect(this.x, this.y, this.width, this.height)
+    }
+}
 
-let player = new Bambi(50, 50, '#ab650f',25, 25)
+let player = new Bambi(50, 50, '#ab650f', 25, 25)
 let carLaneOne = new CarObject(0, 0, '#7d7d78', carSize, 45)
 //function that makes the game run, setInterval
 const gameLoop = () => {
     // clear the canvas
     ctx.clearRect(0, 0, game.width, game.height)
+    //game only runs if player alive
+    if (player.alive) {
+        detectHit(CarObject)
+    }
+    else {
+        if (player.lives > 0) {
+            player.x = 390
+            player.y = 50
+            player.alive = true
+            playerLives--
+            playerLifeText.innerHTML = playerLives
+        }
+        else {
+            //stopGameLoop
+        }
+    }
+    player.render()
+    player.movePlayer()
 }
 const detectHit = (thing) => {
     // if the player's x + width or y + height hits the car, kill player
@@ -129,6 +150,4 @@ const detectHit = (thing) => {
 //set interval changes randomly to random car spawn
 //change level when bembi reaches the end by resetting bambi position and clearing car positions
 // delete car when it reaches end
-// make car appear in random y position when that car gets deleted, if checks based on rng and amount of lanes
-// y position changes to an index in array 
 // same amount of lanes for now
