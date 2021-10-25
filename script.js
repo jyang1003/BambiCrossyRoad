@@ -3,6 +3,11 @@ let startButton;
 let levelName;
 let carSpawnTime = Math.floor(Math.random() * 2500 + 1000)
 const ctx = game.getContext('2d')
+let carSize = Math.floor(Math.random() * 100 + 70)
+let maxCarsOne = 6
+let maxCarsTwo = 6
+let maxCarsThree = 6
+let maxCarsFour = 6
 
 //query selectors
 //assets
@@ -21,6 +26,7 @@ class Bambi {
         this.height = height
         this.alive = true
     }
+    //player movement 
     setDirection(key) {
         console.log('the key pressed', key)
         // pressing key moves the character in direction
@@ -71,6 +77,11 @@ class CarObject {
         this.width = width
         this.height = height
         this.alive = true
+        this.direction = {
+            up: false,
+            down: false,
+            right: false,
+            left: true
     }
     render = function () {
         ctx.fillStyle = this.color
@@ -86,24 +97,29 @@ class BambiMom {
         this.width = width
         this.height = height
         this.alive = false
-        this.direction = {
-            up: false,
-            down: false,
-            right: false,
-            left: true
+        }
+        render = function () {
+            ctx.fillStyle = this.color
+            ctx.fillRect(this.x, this.y, this.width, this.height)
         }
     }
-    render = function () {
-        ctx.fillStyle = this.color
-        ctx.fillRect(this.x, this.y, this.width, this.height)
+
+let player = new Bambi(50, 50, '#ab650f',25, 25)
+let carLaneOne = new CarObject(0, 0, '#7d7d78', carSize, 45)
+//function that makes the game run, setInterval
+
+const detectHit = (thing) => {
+    // if the player's x + width or y + height hits the ogre's x+width or y+height, kill shrek
+    if (
+        player.x < thing.x + thing.width &&
+        player.x + player.width > thing.x &&
+        player.y < thing.y + thing.height &&
+        player.y + player.height > thing.y
+    ) {
+        player.alive = false
     }
 }
 
-//function that makes the game run, setInterval
-
-//function that randomly selects car sizes
-
-//player movement function
 //car movement function
 //car gets deleted when it reaches end
 //new car comes out
