@@ -1,8 +1,14 @@
 // variables needed
 let startButton;
 let levelName;
-let carSpawnTime = Math.floor(Math.random() * 2500 + 1000)
+let carSpawnTime = () => {
+    return Math.floor(Math.random() * 2500 + 1000)
+    
+}
+// let y = () => setInterval(carSpawnTime, 200)
+// console.log(y())
 let carSize = () => { let size = Math.floor(Math.random() * 120 + 70) }
+let carLaneOne = []
 let maxCarsOne = 6
 let maxCarsTwo = 6
 let maxCarsThree = 6
@@ -93,11 +99,11 @@ class CarObject {
             left: false
         }
     }
-        render = function () {
-            ctx.fillStyle = this.color
-            ctx.fillRect(this.x, this.y, this.width, this.height)
-        }
-    
+    render = function () {
+        ctx.fillStyle = this.color
+        ctx.fillRect(this.x, this.y, this.width, this.height)
+    }
+
 }
 //bambi mom object
 class BambiMom {
@@ -116,52 +122,76 @@ class BambiMom {
 }
 
 let player = new Bambi(580, 410, '#ab650f', 25, 25)
-let carLaneOne = new CarObject(0, 0, 'white', 150, 45)
-let carLaneTwo = new CarObject(0, 50, 'white', 150, 45)
-let carLaneThree = new CarObject(0, 100, 'white', 150, 45)
-let carLaneFour = new CarObject(0, 150, 'white', 150, 45)
-let carSpawn = () => {
-    carLaneOne.render()
-    carLaneTwo.render()
-    carLaneThree.render()
-    carLaneFour.render()
-};
-let carMovement = (e) => {
-    carLaneOne.x += 5
-    carLaneTwo.x += 5
-    carLaneThree.x += 5
-    carLaneFour.x += 5
+// let carLaneOne = new CarObject(0, 0, 'white', 150, 45)
+// let carLaneTwo = new CarObject(0, 50, 'white', 150, 45)
+// let carLaneThree = new CarObject(0, 100, 'white', 150, 45)
+// let carLaneFour = new CarObject(0, 150, 'white', 150, 45)
+
+//create a function that spawns new car into lane x every set time
+
+let carSpawnOne = () => {
+    let newCar = new CarObject(-200, 0, 'white', 150, 45)
+    newCar.render()
+    carLaneOne.push(newCar)
+    console.log(carLaneOne)
 }
-let spawn = () => setInterval(carSpawn, carSpawnTime)
+let carSpawnTwo = () => {
+    carLaneTwo.render()
+}
+let carSpawnThree = () => {
+    carLaneThree.render()
+}
+let carSpawnFour = () => {
+    carLaneFour.render()
+}
+let carMovement = () => {
+    carLaneOne.forEach(car => {
+        car.x += 5
+        console.log("this is running")
+        car.render()
+    })
+    // carLaneTwo.x += 5
+    // carLaneThree.x += 5
+    // carLaneFour.x += 5
+}
+let spawnOne = setInterval(carSpawnOne, 3000)
+// let spawnTwo = () => setInterval(carSpawnTwo, carSpawnTime())
+// let spawnThree = () => setInterval(carSpawnThree, carSpawnTime())
+// let spawnFour = () => setInterval(carSpawnFour, carSpawnTime())
+
 //function that makes the game run, setInterval
 const gameLoop = () => {
+    // window.requestAnimationFrame(gameLoop);
     // clear the canvas
     ctx.clearRect(0, 0, game.width, game.height)
     player.render()
     player.movePlayer()
-    carSpawn()
+    
+    // spawnTwo()
+    // spawnThree()
+    // spawnFour()
     //game only runs if player alive
     if (player.alive) {
         carMovement()
-        detectHit(player)
-
-        
-
+        detectHit(carLaneOne)
+        // detectHit(carLaneTwo)
+        // detectHit(carLaneThree)
+        // detectHit(carLaneFour)
     }
     else {
         if (player.lives > 0) {
-            player.x = 390
-            player.y = 50
+            player.x = 580
+            player.y = 410
             player.alive = true
             playerLives--
             playerLifeText.innerHTML = playerLives
         }
         else {
-            stopGameLoop
+                //stop game
         }
     }
-
 }
+
 const detectHit = (thing) => {
     // if the player's x + width or y + height hits the car, kill player
     if (
@@ -171,10 +201,16 @@ const detectHit = (thing) => {
         player.y + player.height > thing.y
     ) {
         player.alive = false
+        playerLives--
+        playerLifeText.innerText = playerLives
+        player.x = 580
+        player.y = 410
     }
 }
 let stopGameLoop = () => clearInterval(gameLoop)
 let gameInterval = setInterval(gameLoop, 30)
+
+
 
 document.addEventListener('keydown', (e) => {
     player.setDirection(e.key)
