@@ -93,26 +93,6 @@ class CarObject {
             left: false
         }
     }
-        moveCar() {
-            if (this.direction.up) this.y -= 0
-            if (this.y <= 0) {
-                this.y = 0
-            }
-            if (this.direction.left) this.x -= 15
-            if (this.x <= 0) {
-                this.x = 0
-            }
-            // move down
-            if (this.direction.down) this.y += 0
-            if (this.y + this.height >= game.height) {
-                this.y = game.height - this.height
-            }
-            // move right
-            if (this.direction.right) this.x += 15
-            if (this.x + this.width >= game.width) {
-                this.x = game.width - this.width
-            }
-        }
         render = function () {
             ctx.fillStyle = this.color
             ctx.fillRect(this.x, this.y, this.width, this.height)
@@ -146,6 +126,12 @@ let carSpawn = () => {
     carLaneThree.render()
     carLaneFour.render()
 };
+let carMovement = (e) => {
+    carLaneOne.x += 5
+    carLaneTwo.x += 5
+    carLaneThree.x += 5
+    carLaneFour.x += 5
+}
 let spawn = () => setInterval(carSpawn, carSpawnTime)
 //function that makes the game run, setInterval
 const gameLoop = () => {
@@ -153,14 +139,13 @@ const gameLoop = () => {
     ctx.clearRect(0, 0, game.width, game.height)
     player.render()
     player.movePlayer()
-
+    carSpawn()
     //game only runs if player alive
     if (player.alive) {
-        spawn()
-        detectHit(carLaneOne)
-        detectHit(carLaneTwo)
-        detectHit(carLaneThree)
-        detectHit(carLaneFour)
+        carMovement()
+        detectHit(player)
+
+        
 
     }
     else {
