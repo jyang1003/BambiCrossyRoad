@@ -1,19 +1,29 @@
 // variables needed
 let startButton;
 let levelName;
+let randomSpeed = () => { return Math.floor(Math.random() * 3 + 5) }
+let gameState = 1
 let carSpawnTime = () => {
-    return Math.floor(Math.random() * 2500 + 1000)
-    
+    let newNum = Math.floor(Math.random() * 2500 + 1000)
+    return newNum
 }
-// let y = () => setInterval(carSpawnTime, 200)
-// console.log(y())
-let carSize = () => { let size = Math.floor(Math.random() * 120 + 70) }
-let carLaneOne = []
-let maxCarsOne = 6
-let maxCarsTwo = 6
-let maxCarsThree = 6
-let maxCarsFour = 6
+
+let carLane = [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+]
+let xPosition = [
+    [-213, -321, -150, -190, -241, -198, -231],
+    [-213, 1200, -150, 1100, -241, 1421, -176]
+];
+let yPoisition = [0, 50, 100, 150, 200, 250, 300];
 let playerLives = 3
+let lifeCounter = document.querySelector('#lifeCounter')
 
 const playerLifeText = document.querySelector('#btm-left')
 
@@ -62,7 +72,7 @@ class Bambi {
         if (this.y <= 0) {
             this.y = 0
         }
-        if (this.direction.left) this.x -= 4
+        if (this.direction.left) this.x -= 6
         if (this.x <= 0) {
             this.x = 0
         }
@@ -72,7 +82,7 @@ class Bambi {
             this.y = game.height - this.height
         }
         // move right
-        if (this.direction.right) this.x += 4
+        if (this.direction.right) this.x += 6
         if (this.x + this.width >= game.width) {
             this.x = game.width - this.width
         }
@@ -120,6 +130,23 @@ class BambiMom {
         ctx.fillRect(this.x, this.y, this.width, this.height)
     }
 }
+const detectHit = (thing) => {
+    // if the player's x + width or y + height hits the car, kill player
+    if (
+        thing.x < player.x + player.width &&
+        thing.x + thing.width > player.x &&
+        thing.y < player.y + player.height &&
+        thing.y + thing.height > player.y
+    ) {
+        // debugger
+        player.alive = false
+        playerLives--
+        lifeCounter.innerText = playerLives
+        player.x = 580
+        player.y = 410
+        player.alive = true
+    }
+}
 
 let player = new Bambi(580, 410, '#ab650f', 25, 25)
 // let carLaneOne = new CarObject(0, 0, 'white', 150, 45)
@@ -129,35 +156,130 @@ let player = new Bambi(580, 410, '#ab650f', 25, 25)
 
 //create a function that spawns new car into lane x every set time
 
-let carSpawnOne = () => {
-    let newCar = new CarObject(-200, 0, 'white', 150, 45)
+
+// let carSpawnOne = () => {
+//     let newCar = new CarObject(-200, 0, 'white', 150, 45)
+//     newCar.render()
+//     carLaneOne.push(newCar)
+//     detectHit(newCar)
+// }
+// let carSpawnTwo = () => {
+//     let newCar = new CarObject(-300, 50, 'white', 150, 45)
+//     newCar.render()
+//     carLaneTwo.push(newCar)
+//     detectHit(newCar)
+// }
+// let carSpawnThree = () => {
+//     let newCar = new CarObject(-329, 100, 'white', 150, 45)
+//     newCar.render()
+//     carLaneThree.push(newCar)
+//     detectHit(newCar)
+// }
+// let carSpawnFour = () => {
+//     let newCar = new CarObject(-264, 150, 'white', 150, 45)
+//     newCar.render()
+//     carLaneFour.push(newCar)
+//     detectHit(newCar)
+// }
+// let carSpawnFive = () => {
+//     let newCar = new CarObject(-231, 200, 'white', 150, 45)
+//     newCar.render()
+//     carLaneFive.push(newCar)
+//     detectHit(newCar)
+// }
+// let carSpawnSix = () => {
+//     let newCar = new CarObject(-177, 250, 'white', 150, 45)
+//     newCar.render()
+//     carLaneSix.push(newCar)
+//     detectHit(newCar)
+// }
+// let carSpawnSeven = () => {
+//     let newCar = new CarObject(-198, 300, 'white', 150, 45)
+//     newCar.render()
+//     carLaneSeven.push(newCar)
+//     detectHit(newCar)
+// }
+let carSpawn = (xPosition, yPosition, laneArray) => {
+    let newCar = new CarObject(xPosition, yPosition, 'white', 150, 45)
     newCar.render()
-    carLaneOne.push(newCar)
-    console.log(carLaneOne)
+    laneArray.push(newCar)
+    detectHit(newCar)
 }
-let carSpawnTwo = () => {
-    carLaneTwo.render()
+const level = (levelNumber) => {
+    // every other lane switches direction for level 2
+    //switch movement from += to -= for other direction 
+    let spawnOne = setInterval(() => carSpawn(xPosition[levelNumber - 1][0], 0, carLane[0]), carSpawnTime())
+    let spawnTwo = setInterval(() => carSpawn(xPosition[levelNumber - 1][1], 50, carLane[1]), carSpawnTime())
+    let spawnThree = setInterval(() => carSpawn(xPosition[levelNumber - 1][2], 100, carLane[2]), carSpawnTime())
+    let spawnFour = setInterval(() => carSpawn(xPosition[levelNumber - 1][3], 150, carLane[3]), carSpawnTime())
+    let spawnFive = setInterval(() => carSpawn(xPosition[levelNumber - 1][4], 200, carLane[4]), carSpawnTime())
+    let spawnSix = setInterval(() => carSpawn(xPosition[levelNumber - 1][5], 250, carLane[5]), carSpawnTime())
+    let spawnSeven = setInterval(() => carSpawn(xPosition[levelNumber - 1][6], 300, carLane[6]), carSpawnTime())
 }
-let carSpawnThree = () => {
-    carLaneThree.render()
-}
-let carSpawnFour = () => {
-    carLaneFour.render()
-}
-let carMovement = () => {
-    carLaneOne.forEach(car => {
-        car.x += 5
-        console.log("this is running")
+
+
+
+let carMovement = (direction) => {
+    carLane[0].forEach(car => {
+        car.x += randomSpeed()
         car.render()
+        detectHit(car)
     })
-    // carLaneTwo.x += 5
-    // carLaneThree.x += 5
-    // carLaneFour.x += 5
+    carLane[1].forEach(car => {
+        if (gameState === 1) {
+            car.x += randomSpeed()
+        }
+        else {
+            car.direction.right = false
+            car.direction.left = true
+            car.x -= randomSpeed()
+        } car.render()
+        detectHit(car)
+
+    })
+    carLane[2].forEach(car => {
+        car.x += randomSpeed()
+        car.render()
+        detectHit(car)
+
+    })
+    carLane[3].forEach(car => {
+        if (gameState === 1) {
+            car.x += randomSpeed()
+        }
+        else {
+            car.direction.right = false
+            car.direction.left = true
+            car.x -= randomSpeed()
+        } car.render()
+        detectHit(car)
+
+    })
+    carLane[4].forEach(car => {
+        car.x += randomSpeed()
+        car.render()
+        detectHit(car)
+    })
+    carLane[5].forEach(car => {
+        if (gameState === 1) {
+            car.x += randomSpeed()
+        }
+        else {
+            car.direction.right = false
+            car.direction.left = true
+            car.x -= randomSpeed()
+        } car.render()
+        detectHit(car)
+
+    })
+    carLane[6].forEach(car => {
+        car.x += randomSpeed()
+        car.render()
+        detectHit(car)
+    })
 }
-let spawnOne = setInterval(carSpawnOne, 3000)
-// let spawnTwo = () => setInterval(carSpawnTwo, carSpawnTime())
-// let spawnThree = () => setInterval(carSpawnThree, carSpawnTime())
-// let spawnFour = () => setInterval(carSpawnFour, carSpawnTime())
+
+level(gameState)
 
 //function that makes the game run, setInterval
 const gameLoop = () => {
@@ -166,50 +288,30 @@ const gameLoop = () => {
     ctx.clearRect(0, 0, game.width, game.height)
     player.render()
     player.movePlayer()
-    
-    // spawnTwo()
-    // spawnThree()
-    // spawnFour()
+
+
     //game only runs if player alive
-    if (player.alive) {
+    if (player.alive && playerLives > 0) {
         carMovement()
-        detectHit(carLaneOne)
-        // detectHit(carLaneTwo)
-        // detectHit(carLaneThree)
-        // detectHit(carLaneFour)
+        if (player.y <= 0) {
+            player.y = 410
+            player.x = 580
+            ctx.clearRect(0, 0, game.width, game.height)
+            gameState++
+            console.log(gameState)
+        }
     }
     else {
-        if (player.lives > 0) {
-            player.x = 580
-            player.y = 410
-            player.alive = true
-            playerLives--
-            playerLifeText.innerHTML = playerLives
-        }
-        else {
-                //stop game
-        }
+        //stop
     }
 }
 
-const detectHit = (thing) => {
-    // if the player's x + width or y + height hits the car, kill player
-    if (
-        player.x < thing.x + thing.width &&
-        player.x + player.width > thing.x &&
-        player.y < thing.y + thing.height &&
-        player.y + player.height > thing.y
-    ) {
-        player.alive = false
-        playerLives--
-        playerLifeText.innerText = playerLives
-        player.x = 580
-        player.y = 410
-    }
-}
+
+
+
+
 let stopGameLoop = () => clearInterval(gameLoop)
 let gameInterval = setInterval(gameLoop, 30)
-
 
 
 document.addEventListener('keydown', (e) => {
@@ -220,9 +322,10 @@ document.addEventListener('keyup', (e) => {
         player.unsetDirection(e.key)
     }
 })
-//car gets deleted when it reaches end
-//new car comes out
+
+
 //set interval changes randomly to random car spawn
 //change level when bembi reaches the end by resetting bambi position and clearing car positions
 // delete car when it reaches end
 // same amount of lanes for now
+
