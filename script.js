@@ -1,6 +1,6 @@
 // variables needed
 let startButton = document.querySelector('#status');
-let levelName;
+let levelName = document.querySelector('#titleText');
 let randomSpeed = () => { return Math.floor(Math.random() * 3 + 5) }
 let gameState = 0
 let carSpawnTime = () => {
@@ -27,13 +27,10 @@ let xPosition = [
     [-213, -321, -150, -190, -241, -198, -231],
     [-213, 1200, -150, 1100, -241, 1421, -176]
 ];
-// let yPosition = [0, 50, 100, 150, 200, 250, 300];
+
 let playerLives = 3
 let lifeCounter = document.querySelector('#lifeCounter')
-const playerLifeText = document.querySelector('#btm-left')
 
-//query selectors
-//assets
 const game = document.getElementById('canvas')
 game.setAttribute('width', getComputedStyle(game)['width'])
 game.setAttribute('height', getComputedStyle(game)['height'])
@@ -41,19 +38,23 @@ const ctx = game.getContext('2d')
 
 //images
 //const objImg = new Image()
-//objImg.src = ('pathway')
 
+const bambiImage = new Image()
+bambiImage.src = ('/Users/jerry/Desktop/SEI Pumpkin Smashers/projects/BambiCrossyRoad/img/bambi.png')
 
 
 //bambi object
 class Bambi {
-    constructor(x, y, color, width, height) {
+    constructor(url, x, y, width, height) {
+        this.url = url
         this.x = x
         this.y = y
-        this.color = color
         this.width = width
         this.height = height
         this.alive = true
+        this.render = function () {
+            ctx.drawImage(this.url, this.x, this.y, this.width, this.height)
+        }
         this.direction = {
             up: false,
             down: false,
@@ -61,6 +62,7 @@ class Bambi {
             left: false
         }
     }
+
     //player movement 
     setDirection(key) {
         console.log('the key pressed', key)
@@ -97,23 +99,22 @@ class Bambi {
             this.x = game.width - this.width
         }
     }
-    //this.render
-    render = function () {
-        ctx.fillStyle = this.color
-        ctx.fillRect(this.x, this.y, this.width, this.height)
-        //ctx.draw 
-    }
 }
 
+let carImg = new Image()
+carImg.src = ('/Users/jerry/Desktop/SEI Pumpkin Smashers/projects/BambiCrossyRoad/img/car.png')
 //car object
 class CarObject {
-    constructor(x, y, color, width, height) {
+    constructor(url, x, y, width, height) {
+        this.url = url
         this.x = x
         this.y = y
-        this.color = color
         this.width = width
         this.height = height
         this.alive = true
+        this.render = function () {
+            ctx.drawImage(this.url, this.x, this.y, this.width, this.height)
+        }
         this.direction = {
             up: false,
             down: false,
@@ -121,26 +122,24 @@ class CarObject {
             left: false
         }
     }
-    render = function () {
-        ctx.fillStyle = this.color
-        ctx.fillRect(this.x, this.y, this.width, this.height)
-    }
 
 }
+let bambiMomImage = new Image()
+bambiMomImage.src = ('/Users/jerry/Desktop/SEI Pumpkin Smashers/projects/BambiCrossyRoad/img/bambiMom.png')
 //bambi mom object
 class BambiMom {
-    constructor(x, y, color, width, height) {
+    constructor(url, x, y, width, height) {
+        this.url = url
         this.x = x
         this.y = y
-        this.color = color
         this.width = width
         this.height = height
         this.alive = false
+        this.render = function () {
+            ctx.drawImage(this.url, this.x, this.y, this.width, this.height)
+        }
     }
-    render = function () {
-        ctx.fillStyle = this.color
-        ctx.fillRect(this.x, this.y, this.width, this.height)
-    }
+
 }
 const detectHit = (thing) => {
     // if the player's x + width or y + height hits the car, kill player
@@ -159,18 +158,32 @@ const detectHit = (thing) => {
         player.alive = true
     }
 }
-
-let player = new Bambi(580, 410, '#ab650f', 25, 25)
+const detectHitMom = (thing) => {
+    // if the player's x + width or y + height hits the car, kill player
+    if (
+        thing.x < player.x + player.width &&
+        thing.x + thing.width > player.x &&
+        thing.y < player.y + player.height &&
+        thing.y + thing.height > player.y
+    ) {
+        gameState++
+        player.y = 410
+        player.x = 580
+    }
+}
+//model rendering
+let player = new Bambi(bambiImage, 580, 410, 25, 25)
+let mom = new BambiMom(bambiMomImage, 580, 0, 25, 25)
 let carSpawn = (xPosition, yPosition, laneArray) => {
-    let newCar = new CarObject(xPosition, yPosition, 'white', 150, 45)
+    let newCar = new CarObject(carImg, xPosition, yPosition, 150, 45)
     newCar.render()
     laneArray.push(newCar)
     detectHit(newCar)
 }
+//this function spawns cars
+//positions spawned are based on level
 const level = (levelNumber) => {
     console.log(levelNumber)
-    // every other lane switches direction for level 2
-    //switch movement from += to -= for other direction 
     if (levelNumber < 3) {
         console.log('enter first if')
         spawnOne = setInterval(() => carSpawn(xPosition[levelNumber - 1][0], 0, carLane[0]), carSpawnTime())
@@ -180,15 +193,11 @@ const level = (levelNumber) => {
         spawnFive = setInterval(() => carSpawn(xPosition[levelNumber - 1][4], 200, carLane[4]), carSpawnTime())
         spawnSix = setInterval(() => carSpawn(xPosition[levelNumber - 1][5], 250, carLane[5]), carSpawnTime())
         spawnSeven = setInterval(() => carSpawn(xPosition[levelNumber - 1][6], 300, carLane[6]), carSpawnTime())
+        startButton.innerText = 'Cross the road!'
     }
 }
 
-// console.log('level function run')
-
-// }
-
-
-
+//car movement function
 let carMovement = (direction) => {
     carLane[0].forEach(car => {
         car.x += randomSpeed()
@@ -249,7 +258,6 @@ let carMovement = (direction) => {
     })
 }
 
-// level(gameState)
 
 //function that makes the game run, setInterval
 const gameLoop = () => {
@@ -263,12 +271,22 @@ const gameLoop = () => {
     if (player.alive && playerLives > 0 &&
         gameState < 3) {
         carMovement()
+        if (gameState === 0) {
+            levelName.innerText = "Bambi's Crossy Road"
+        }
+        else if (gameState === 1) {
+            levelName.innerText = 'Staten Island'
+        }
+        else if (gameState === 2) {
+            levelName.innerText = 'Queens'
+        }
         if (player.y <= 0) {
             player.y = 410
             player.x = 580
             ctx.clearRect(0, 0, game.width, game.height)
             gameState++
             console.log(gameState)
+            lifeCounter.innerText = playerLives
             carLane = [
                 [],
                 [],
@@ -288,16 +306,47 @@ const gameLoop = () => {
             level(gameState)
         }
     }
-    else {
-        //stop
-        stopGameLoop()
+    else if (player.alive && playerLives > 0 &&
+        gameState === 3) {
+        levelName.innerText = "Bambi's Mom"
+        mom.alive = true
+        mom.render()
+        detectHitMom(mom)
+        startButton.innerText = 'Reach your mom!'
+        if (gameState === 4) {
+            startButton.innerText = 'You won! Cross again?'
+            gameState = 0
+        }
 
+    } else if (playerLives === 0) {
+        //stop
+        player.y = 410
+        player.x = 580
+        startButton.innerText = 'You lost! Cross again?'
+        stopGameLoop()
+        clearInterval(spawnOne)
+        clearInterval(spawnTwo)
+        clearInterval(spawnThree)
+        clearInterval(spawnFour)
+        clearInterval(spawnFive)
+        clearInterval(spawnSix)
+        clearInterval(spawnSeven)
+        carLane = [
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            []
+        ]
+        gameState = 0
+        playerLives = 3
     }
 }
 
 let stopGameLoop = () => {
     clearInterval(gameLoop)
-    clearInterval(level)
 }
 let gameInterval = setInterval(gameLoop, 30)
 
