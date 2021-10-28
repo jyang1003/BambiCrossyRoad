@@ -1,13 +1,12 @@
 // variables needed
-let startButton;
+let startButton = document.querySelector('#status');
 let levelName;
 let randomSpeed = () => { return Math.floor(Math.random() * 3 + 5) }
-let gameState = 1
+let gameState = 0
 let carSpawnTime = () => {
     let newNum = Math.floor(Math.random() * 2500 + 1000)
     return newNum
 }
-
 let carLane = [
     [],
     [],
@@ -17,14 +16,20 @@ let carLane = [
     [],
     []
 ]
+let spawnOne;
+let spawnTwo;
+let spawnThree;
+let spawnFour;
+let spawnFive;
+let spawnSix;
+let spawnSeven;
 let xPosition = [
     [-213, -321, -150, -190, -241, -198, -231],
     [-213, 1200, -150, 1100, -241, 1421, -176]
 ];
-let yPoisition = [0, 50, 100, 150, 200, 250, 300];
+// let yPosition = [0, 50, 100, 150, 200, 250, 300];
 let playerLives = 3
 let lifeCounter = document.querySelector('#lifeCounter')
-
 const playerLifeText = document.querySelector('#btm-left')
 
 //query selectors
@@ -33,6 +38,11 @@ const game = document.getElementById('canvas')
 game.setAttribute('width', getComputedStyle(game)['width'])
 game.setAttribute('height', getComputedStyle(game)['height'])
 const ctx = game.getContext('2d')
+
+//images
+//const objImg = new Image()
+//objImg.src = ('pathway')
+
 
 
 //bambi object
@@ -87,9 +97,11 @@ class Bambi {
             this.x = game.width - this.width
         }
     }
+    //this.render
     render = function () {
         ctx.fillStyle = this.color
         ctx.fillRect(this.x, this.y, this.width, this.height)
+        //ctx.draw 
     }
 }
 
@@ -149,56 +161,6 @@ const detectHit = (thing) => {
 }
 
 let player = new Bambi(580, 410, '#ab650f', 25, 25)
-// let carLaneOne = new CarObject(0, 0, 'white', 150, 45)
-// let carLaneTwo = new CarObject(0, 50, 'white', 150, 45)
-// let carLaneThree = new CarObject(0, 100, 'white', 150, 45)
-// let carLaneFour = new CarObject(0, 150, 'white', 150, 45)
-
-//create a function that spawns new car into lane x every set time
-
-
-// let carSpawnOne = () => {
-//     let newCar = new CarObject(-200, 0, 'white', 150, 45)
-//     newCar.render()
-//     carLaneOne.push(newCar)
-//     detectHit(newCar)
-// }
-// let carSpawnTwo = () => {
-//     let newCar = new CarObject(-300, 50, 'white', 150, 45)
-//     newCar.render()
-//     carLaneTwo.push(newCar)
-//     detectHit(newCar)
-// }
-// let carSpawnThree = () => {
-//     let newCar = new CarObject(-329, 100, 'white', 150, 45)
-//     newCar.render()
-//     carLaneThree.push(newCar)
-//     detectHit(newCar)
-// }
-// let carSpawnFour = () => {
-//     let newCar = new CarObject(-264, 150, 'white', 150, 45)
-//     newCar.render()
-//     carLaneFour.push(newCar)
-//     detectHit(newCar)
-// }
-// let carSpawnFive = () => {
-//     let newCar = new CarObject(-231, 200, 'white', 150, 45)
-//     newCar.render()
-//     carLaneFive.push(newCar)
-//     detectHit(newCar)
-// }
-// let carSpawnSix = () => {
-//     let newCar = new CarObject(-177, 250, 'white', 150, 45)
-//     newCar.render()
-//     carLaneSix.push(newCar)
-//     detectHit(newCar)
-// }
-// let carSpawnSeven = () => {
-//     let newCar = new CarObject(-198, 300, 'white', 150, 45)
-//     newCar.render()
-//     carLaneSeven.push(newCar)
-//     detectHit(newCar)
-// }
 let carSpawn = (xPosition, yPosition, laneArray) => {
     let newCar = new CarObject(xPosition, yPosition, 'white', 150, 45)
     newCar.render()
@@ -206,16 +168,24 @@ let carSpawn = (xPosition, yPosition, laneArray) => {
     detectHit(newCar)
 }
 const level = (levelNumber) => {
+    console.log(levelNumber)
     // every other lane switches direction for level 2
     //switch movement from += to -= for other direction 
-    let spawnOne = setInterval(() => carSpawn(xPosition[levelNumber - 1][0], 0, carLane[0]), carSpawnTime())
-    let spawnTwo = setInterval(() => carSpawn(xPosition[levelNumber - 1][1], 50, carLane[1]), carSpawnTime())
-    let spawnThree = setInterval(() => carSpawn(xPosition[levelNumber - 1][2], 100, carLane[2]), carSpawnTime())
-    let spawnFour = setInterval(() => carSpawn(xPosition[levelNumber - 1][3], 150, carLane[3]), carSpawnTime())
-    let spawnFive = setInterval(() => carSpawn(xPosition[levelNumber - 1][4], 200, carLane[4]), carSpawnTime())
-    let spawnSix = setInterval(() => carSpawn(xPosition[levelNumber - 1][5], 250, carLane[5]), carSpawnTime())
-    let spawnSeven = setInterval(() => carSpawn(xPosition[levelNumber - 1][6], 300, carLane[6]), carSpawnTime())
+    if (levelNumber < 3) {
+        console.log('enter first if')
+        spawnOne = setInterval(() => carSpawn(xPosition[levelNumber - 1][0], 0, carLane[0]), carSpawnTime())
+        spawnTwo = setInterval(() => carSpawn(xPosition[levelNumber - 1][1], 50, carLane[1]), carSpawnTime())
+        spawnThree = setInterval(() => carSpawn(xPosition[levelNumber - 1][2], 100, carLane[2]), carSpawnTime())
+        spawnFour = setInterval(() => carSpawn(xPosition[levelNumber - 1][3], 150, carLane[3]), carSpawnTime())
+        spawnFive = setInterval(() => carSpawn(xPosition[levelNumber - 1][4], 200, carLane[4]), carSpawnTime())
+        spawnSix = setInterval(() => carSpawn(xPosition[levelNumber - 1][5], 250, carLane[5]), carSpawnTime())
+        spawnSeven = setInterval(() => carSpawn(xPosition[levelNumber - 1][6], 300, carLane[6]), carSpawnTime())
+    }
 }
+
+// console.log('level function run')
+
+// }
 
 
 
@@ -279,7 +249,7 @@ let carMovement = (direction) => {
     })
 }
 
-level(gameState)
+// level(gameState)
 
 //function that makes the game run, setInterval
 const gameLoop = () => {
@@ -289,9 +259,9 @@ const gameLoop = () => {
     player.render()
     player.movePlayer()
 
-
     //game only runs if player alive
-    if (player.alive && playerLives > 0) {
+    if (player.alive && playerLives > 0 &&
+        gameState < 3) {
         carMovement()
         if (player.y <= 0) {
             player.y = 410
@@ -299,20 +269,37 @@ const gameLoop = () => {
             ctx.clearRect(0, 0, game.width, game.height)
             gameState++
             console.log(gameState)
+            carLane = [
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                []
+            ]
+            clearInterval(spawnOne)
+            clearInterval(spawnTwo)
+            clearInterval(spawnThree)
+            clearInterval(spawnFour)
+            clearInterval(spawnFive)
+            clearInterval(spawnSix)
+            clearInterval(spawnSeven)
+            level(gameState)
         }
     }
     else {
         //stop
+        stopGameLoop()
+
     }
 }
 
-
-
-
-
-let stopGameLoop = () => clearInterval(gameLoop)
+let stopGameLoop = () => {
+    clearInterval(gameLoop)
+    clearInterval(level)
+}
 let gameInterval = setInterval(gameLoop, 30)
-
 
 document.addEventListener('keydown', (e) => {
     player.setDirection(e.key)
@@ -322,10 +309,3 @@ document.addEventListener('keyup', (e) => {
         player.unsetDirection(e.key)
     }
 })
-
-
-//set interval changes randomly to random car spawn
-//change level when bembi reaches the end by resetting bambi position and clearing car positions
-// delete car when it reaches end
-// same amount of lanes for now
-
