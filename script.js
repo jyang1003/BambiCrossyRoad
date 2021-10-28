@@ -40,7 +40,7 @@ const ctx = game.getContext('2d')
 //const objImg = new Image()
 
 const bambiImage = new Image()
-bambiImage.src = ('/Users/jerry/Desktop/SEI Pumpkin Smashers/projects/BambiCrossyRoad/img/bambi.png')
+bambiImage.src = ('img/bambi.png')
 
 
 //bambi object
@@ -102,7 +102,7 @@ class Bambi {
 }
 
 let carImg = new Image()
-carImg.src = ('/Users/jerry/Desktop/SEI Pumpkin Smashers/projects/BambiCrossyRoad/img/car.png')
+carImg.src = ('img/car.png')
 //car object
 class CarObject {
     constructor(url, x, y, width, height) {
@@ -124,7 +124,7 @@ class CarObject {
     }
 }
 let bambiMomImage = new Image()
-bambiMomImage.src = ('/Users/jerry/Desktop/SEI Pumpkin Smashers/projects/BambiCrossyRoad/img/bambiMom.png')
+bambiMomImage.src = ('img/bambiMom.png')
 //bambi mom object
 class BambiMom {
     constructor(url, x, y, width, height) {
