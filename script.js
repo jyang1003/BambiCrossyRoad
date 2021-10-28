@@ -1,10 +1,10 @@
 // variables needed
 let startButton = document.querySelector('#status');
 let levelName = document.querySelector('#titleText');
-let randomSpeed = () => { return Math.floor(Math.random() * 3 + 5) }
+let randomSpeed = () => { return Math.floor(Math.random() * 3 + 4) }
 let gameState = 0
 let carSpawnTime = () => {
-    let newNum = Math.floor(Math.random() * 2500 + 1000)
+    let newNum = Math.floor(Math.random() * 2500 + 1300)
     return newNum
 }
 let carLane = [
@@ -24,8 +24,8 @@ let spawnFive;
 let spawnSix;
 let spawnSeven;
 let xPosition = [
-    [-213, -321, -150, -190, -241, -198, -231],
-    [-213, 1200, -150, 1100, -241, 1421, -176]
+    [-213, -321, -150, -190, -241, -198, -151],
+    [-213, 1150, -150, 1100, -241, 1121, -176]
 ];
 
 let playerLives = 3
@@ -122,7 +122,6 @@ class CarObject {
             left: false
         }
     }
-
 }
 let bambiMomImage = new Image()
 bambiMomImage.src = ('/Users/jerry/Desktop/SEI Pumpkin Smashers/projects/BambiCrossyRoad/img/bambiMom.png')
@@ -139,7 +138,6 @@ class BambiMom {
             ctx.drawImage(this.url, this.x, this.y, this.width, this.height)
         }
     }
-
 }
 const detectHit = (thing) => {
     // if the player's x + width or y + height hits the car, kill player
@@ -323,7 +321,6 @@ const gameLoop = () => {
         player.y = 410
         player.x = 580
         startButton.innerText = 'You lost! Cross again?'
-        stopGameLoop()
         clearInterval(spawnOne)
         clearInterval(spawnTwo)
         clearInterval(spawnThree)
@@ -345,9 +342,7 @@ const gameLoop = () => {
     }
 }
 
-let stopGameLoop = () => {
-    clearInterval(gameLoop)
-}
+
 let gameInterval = setInterval(gameLoop, 30)
 
 document.addEventListener('keydown', (e) => {
