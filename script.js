@@ -35,9 +35,6 @@ game.setAttribute('width', getComputedStyle(game)['width'])
 game.setAttribute('height', getComputedStyle(game)['height'])
 const ctx = game.getContext('2d')
 
-//images
-//const objImg = new Image()
-
 const bambiImage = new Image()
 bambiImage.src = ('img/bambi.png')
 //bambi object
@@ -267,6 +264,7 @@ const gameLoop = () => {
     if (player.alive && playerLives > 0 &&
         gameState < 3) {
         carMovement()
+
         if (gameState === 0) {
             levelName.innerText = "Bambi's Crossy Road"
         }
@@ -276,6 +274,7 @@ const gameLoop = () => {
         else if (gameState === 2) {
             levelName.innerText = 'Queens'
         }
+        //passing level stuff
         if (player.y <= 0) {
             player.y = 410
             player.x = 580
@@ -283,6 +282,7 @@ const gameLoop = () => {
             gameState++
             console.log(gameState)
             lifeCounter.innerText = playerLives
+            //clear board of cars
             carLane = [
                 [],
                 [],
