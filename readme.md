@@ -24,3 +24,5 @@ TLDR: Get Bambi to her mom before she dead
 * 1. Have a video play at the player reaching Bambi's mother
 * 2. Make the car movements completely random so players cannot memorize stage
 * 3. Add the rest of the levels and change level 3 to 6
+
+Live site: https://jyang1003.github.io/BambiCrossyRoad/
