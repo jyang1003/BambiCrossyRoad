@@ -1,12 +1,21 @@
 // variables needed
 let startButton = document.querySelector('#status');
 let levelName = document.querySelector('#titleText');
-let randomSpeed = () => { return Math.floor(Math.random() * 3 + 4) }
+let lifeCounter = document.querySelector('#lifeCounter')
+let playerLives = 3
 let gameState = 0
+let randomSpeed = () => { return Math.floor(Math.random() * 3 + 4) }
 let carSpawnTime = () => {
     let newNum = Math.floor(Math.random() * 2500 + 1300)
     return newNum
 }
+let spawnOne;
+let spawnTwo;
+let spawnThree;
+let spawnFour;
+let spawnFive;
+let spawnSix;
+let spawnSeven;
 let carLane = [
     [],
     [],
@@ -16,20 +25,10 @@ let carLane = [
     [],
     []
 ]
-let spawnOne;
-let spawnTwo;
-let spawnThree;
-let spawnFour;
-let spawnFive;
-let spawnSix;
-let spawnSeven;
 let xPosition = [
     [-213, -321, -150, -190, -241, -198, -151],
     [-213, 1150, -150, 1100, -241, 1121, -176]
 ];
-
-let playerLives = 3
-let lifeCounter = document.querySelector('#lifeCounter')
 
 const game = document.getElementById('canvas')
 game.setAttribute('width', getComputedStyle(game)['width'])
@@ -41,8 +40,6 @@ const ctx = game.getContext('2d')
 
 const bambiImage = new Image()
 bambiImage.src = ('img/bambi.png')
-
-
 //bambi object
 class Bambi {
     constructor(url, x, y, width, height) {
@@ -62,7 +59,6 @@ class Bambi {
             left: false
         }
     }
-
     //player movement 
     setDirection(key) {
         console.log('the key pressed', key)
@@ -194,7 +190,15 @@ const level = (levelNumber) => {
         startButton.innerText = 'Cross the road!'
     }
 }
-
+const stopSpwan = () => {
+    clearInterval(spawnOne)
+    clearInterval(spawnTwo)
+    clearInterval(spawnThree)
+    clearInterval(spawnFour)
+    clearInterval(spawnFive)
+    clearInterval(spawnSix)
+    clearInterval(spawnSeven)
+}
 //car movement function
 let carMovement = (direction) => {
     carLane[0].forEach(car => {
@@ -212,13 +216,11 @@ let carMovement = (direction) => {
             car.x -= randomSpeed()
         } car.render()
         detectHit(car)
-
     })
     carLane[2].forEach(car => {
         car.x += randomSpeed()
         car.render()
         detectHit(car)
-
     })
     carLane[3].forEach(car => {
         if (gameState === 1) {
@@ -230,7 +232,6 @@ let carMovement = (direction) => {
             car.x -= randomSpeed()
         } car.render()
         detectHit(car)
-
     })
     carLane[4].forEach(car => {
         car.x += randomSpeed()
@@ -247,7 +248,6 @@ let carMovement = (direction) => {
             car.x -= randomSpeed()
         } car.render()
         detectHit(car)
-
     })
     carLane[6].forEach(car => {
         car.x += randomSpeed()
@@ -255,8 +255,6 @@ let carMovement = (direction) => {
         detectHit(car)
     })
 }
-
-
 //function that makes the game run, setInterval
 const gameLoop = () => {
     // window.requestAnimationFrame(gameLoop);
@@ -265,7 +263,7 @@ const gameLoop = () => {
     player.render()
     player.movePlayer()
 
-    //game only runs if player alive
+    //game only runs if player alive 
     if (player.alive && playerLives > 0 &&
         gameState < 3) {
         carMovement()
@@ -294,13 +292,7 @@ const gameLoop = () => {
                 [],
                 []
             ]
-            clearInterval(spawnOne)
-            clearInterval(spawnTwo)
-            clearInterval(spawnThree)
-            clearInterval(spawnFour)
-            clearInterval(spawnFive)
-            clearInterval(spawnSix)
-            clearInterval(spawnSeven)
+            stopSpwan()
             level(gameState)
         }
     }
@@ -321,13 +313,7 @@ const gameLoop = () => {
         player.y = 410
         player.x = 580
         startButton.innerText = 'You lost! Cross again?'
-        clearInterval(spawnOne)
-        clearInterval(spawnTwo)
-        clearInterval(spawnThree)
-        clearInterval(spawnFour)
-        clearInterval(spawnFive)
-        clearInterval(spawnSix)
-        clearInterval(spawnSeven)
+        stopSpwan()
         carLane = [
             [],
             [],
@@ -341,10 +327,9 @@ const gameLoop = () => {
         playerLives = 3
     }
 }
-
-
+//game loop interval
 let gameInterval = setInterval(gameLoop, 30)
-
+//keyboard event listeners to register movement
 document.addEventListener('keydown', (e) => {
     player.setDirection(e.key)
 })
