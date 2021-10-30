@@ -141,27 +141,34 @@ const detectHit = (thing) => {
         thing.y + thing.height > player.y
     ) {
         // debugger
-        player.alive = false
-        playerLives--
-        lifeCounter.innerText = playerLives
-        player.x = 580
-        player.y = 410
-        player.alive = true
+        if (thing instanceof CarObject) {
+            player.alive = false
+            playerLives--
+            lifeCounter.innerText = playerLives
+            player.x = 580
+            player.y = 410
+            player.alive = true
+        }
+        if (thing instanceof BambiMom) {
+            gameState++
+            player.y = 410
+            player.x = 580
+        }
     }
 }
-const detectHitMom = (thing) => {
-    // if the player's x + width or y + height hits the car, kill player
-    if (
-        thing.x < player.x + player.width &&
-        thing.x + thing.width > player.x &&
-        thing.y < player.y + player.height &&
-        thing.y + thing.height > player.y
-    ) {
-        gameState++
-        player.y = 410
-        player.x = 580
-    }
-}
+// const detectHitMom = (thing) => {
+//     // if the player's x + width or y + height hits the car, kill player
+//     if (
+//         thing.x < player.x + player.width &&
+//         thing.x + thing.width > player.x &&
+//         thing.y < player.y + player.height &&
+//         thing.y + thing.height > player.y
+//     ) {
+// gameState++
+// player.y = 410
+// player.x = 580
+//     }
+// }
 //model rendering
 let player = new Bambi(bambiImage, 580, 410, 25, 25)
 let mom = new BambiMom(bambiMomImage, 580, 0, 25, 25)
@@ -265,14 +272,27 @@ const gameLoop = () => {
         gameState < 3) {
         carMovement()
 
-        if (gameState === 0) {
-            levelName.innerText = "Bambi's Crossy Road"
-        }
-        else if (gameState === 1) {
-            levelName.innerText = 'Staten Island'
-        }
-        else if (gameState === 2) {
-            levelName.innerText = 'Queens'
+        // if (gameState === 0) {
+        //     levelName.innerText = "Bambi's Crossy Road"
+        // }
+        // else if (gameState === 1) {
+        //     levelName.innerText = 'Staten Island'
+        // }
+        // else if (gameState === 2) {
+        //     levelName.innerText = 'Queens'
+        // }
+        switch (gameState) {
+            case 0:
+                levelName.innerText = "Bambi's Crossy Road"
+                break;
+            case 1:
+                levelName.innerText = 'Staten Island'
+                break;
+            case 2:
+                levelName.innerText = 'Queens'
+                break;
+            default:
+                console.log('gameState is past 2')
         }
         //passing level stuff
         if (player.y <= 0) {
@@ -301,11 +321,12 @@ const gameLoop = () => {
         levelName.innerText = "Bambi's Mom"
         mom.alive = true
         mom.render()
-        detectHitMom(mom)
+        detectHit(mom)
         startButton.innerText = 'Reach your mom!'
         if (gameState === 4) {
             startButton.innerText = 'You won! Cross again?'
             gameState = 0
+            playerLives = 3
         }
 
     } else if (playerLives === 0) {
